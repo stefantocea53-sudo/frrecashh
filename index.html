@@ -3,651 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verdien geld met scrollen en games testen</title>
+  <title>Ontdek de beste online beloningen</title>
   <link rel="icon" href="data:,">
-  <meta name="description" content="Ontvang een bonus, voltooi 2 korte taken en begin direct met verdienen via scrollen en games testen." />
-  <link rel="preload" as="image" href="assets/freecash-logo.webp" />
-  <link rel="preload" as="image" href="assets/tiktok-logo.webp" />
   <style>
+    /* RESET & CORE STYLES */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #07130c;
-      --bg-2: #0d1d13;
-      --card: rgba(18, 33, 24, 0.95);
-      --border: rgba(87, 214, 132, 0.16);
-      --green: #34d879;
-      --green-dark: #27b865;
-      --green-soft: rgba(52, 216, 121, 0.14);
-      --text: #f2f7f3;
-      --muted: #afbeb4;
-      --yellow: #ffd25e;
-      --shadow: 0 22px 60px rgba(0,0,0,0.35);
-      --font: -apple-system, "Segoe UI", system-ui, sans-serif;
+      --bg-dark: #050b07;
+      --card-bg: rgba(15, 28, 19, 0.98);
+      --border-color: rgba(61, 191, 106, 0.15);
+      --primary-green: #34d879;
+      --text-white: #f2f7f3;
+      --text-muted: #a8b7ad;
+      --font-main: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
       min-height: 100vh;
-      font-family: var(--font);
-      color: var(--text);
-      background:
-        radial-gradient(circle at top center, rgba(52,216,121,0.22), transparent 34%),
-        linear-gradient(180deg, #09150d 0%, #07110b 38%, #050b07 100%);
+      font-family: var(--font-main);
+      color: var(--text-white);
+      background: radial-gradient(circle at top center, rgba(52,216,121,0.15), transparent 40%), var(--bg-dark);
       display: flex;
       justify-content: center;
+      padding: 0 16px;
       -webkit-font-smoothing: antialiased;
     }
 
-    .page {
-      width: 100%;
-      max-width: 520px;
-      padding: 20px 18px 46px;
-    }
+    .container { width: 100%; max-width: 480px; padding-top: 40px; }
 
-    .topbar {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
+    /* UI STATES */
+    #age-gate, #main-content, #blocked { display: none; }
 
-    .top-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(8, 18, 12, 0.88);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #dff5e6;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      box-shadow: var(--shadow);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 0 6px rgba(52,216,121,0.13);
-      flex-shrink: 0;
-    }
-
-    .hero {
-      background: linear-gradient(180deg, rgba(16,31,22,0.96), rgba(10,19,14,0.96));
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 20px 18px 18px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(52,216,121,0.18), transparent 28%);
-      pointer-events: none;
-    }
-
-    .logos {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .logo-box {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .logo-tiktok img {
-      width: 37px;
-      height: 37px;
-      object-fit: contain;
-    }
-
-    .logo-sep {
-      color: #7d9285;
-      font-size: 22px;
-    }
-
-    .urgency {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255, 210, 94, 0.12);
-      color: var(--yellow);
-      border: 1px solid rgba(255, 210, 94, 0.2);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin: 0 auto 16px;
-      width: fit-content;
-      position: relative;
-      z-index: 1;
-    }
-
-    .headline {
+    /* CARDS & LAYOUT */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 32px 24px;
       text-align: center;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1.06;
-      letter-spacing: -0.04em;
-      font-weight: 900;
-      margin-bottom: 12px;
-      position: relative;
-      z-index: 1;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
-    .headline .accent {
-      color: var(--green);
-    }
+    .headline { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+    .accent { color: var(--primary-green); }
+    .subtext { font-size: 16px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
 
-    .subtext {
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      max-width: 420px;
-      margin: 0 auto 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .trust-line {
-      text-align: center;
-      font-size: 13px;
-      color: #9fe3b7;
-      font-weight: 700;
-      margin: 0 auto 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .trust-line strong {
-      color: #ffffff;
-    }
-
-    .proof-row {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .proof-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 12px 10px;
-      text-align: center;
-    }
-
-    .proof-card strong {
+    /* BUTTONS */
+    .btn {
       display: block;
-      font-size: 17px;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-
-    .proof-card span {
-      font-size: 11px;
-      line-height: 1.35;
-      color: var(--muted);
-    }
-
-    .cta-stack {
-      position: sticky;
-      bottom: 14px;
-      z-index: 10;
-    }
-
-    .cta-btn {
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
       text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.2s;
+      border: none;
+      margin-bottom: 12px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
       background: linear-gradient(180deg, #45ea8a 0%, #28c56a 100%);
       color: #041109;
-      border-radius: 20px;
-      padding: 18px 18px;
-      border: none;
-      box-shadow: 0 18px 40px rgba(40,197,106,0.34), inset 0 1px 0 rgba(255,255,255,0.35);
-      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-      margin-bottom: 10px;
+    }
+    .btn-outline {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .cta-btn:hover {
-      transform: translateY(-2px) scale(1.01);
-      filter: brightness(1.02);
-    }
-
-    .cta-btn:active {
-      transform: translateY(0);
-    }
-
-    .cta-icon {
-      min-width: 56px;
-      height: 38px;
-      border-radius: 12px;
-      background: rgba(4,17,9,0.12);
+    /* STEPS SECTION (Compliant with Partner Policy) */
+    .steps-container { margin-top: 24px; text-align: left; }
+    .step-item {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      flex-shrink: 0;
-      padding: 0 10px;
-    }
-
-    .cta-icon svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
-
-    .cta-copy {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .cta-copy strong {
-      font-size: 18px;
-      line-height: 1.15;
-      font-weight: 900;
-      color: #041109;
-      letter-spacing: -0.02em;
-    }
-
-    .cta-copy span {
-      font-size: 12px;
-      line-height: 1.35;
-      color: rgba(4,17,9,0.74);
-      font-weight: 700;
-    }
-
-    .cta-note {
-      text-align: center;
-      font-size: 12px;
-      color: #cfdbd1;
-      line-height: 1.45;
-      margin-bottom: 4px;
-    }
-
-    .cta-note strong {
-      color: #fff;
-    }
-
-    .strip {
-      margin: 16px 0;
-      background: linear-gradient(180deg, rgba(255, 210, 94, 0.13), rgba(255, 210, 94, 0.07));
-      border: 1px solid rgba(255, 210, 94, 0.18);
-      color: #fff4cc;
-      border-radius: 18px;
-      padding: 14px 15px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .strip strong {
-      color: #fff;
-    }
-
-    .section-title {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: #7fa18c;
-      margin: 18px 0 10px;
-      text-align: center;
-    }
-
-    .offer-card,
-    .steps,
-    .testimonial {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    .offer-card {
+      gap: 16px;
+      background: rgba(255,255,255,0.03);
       padding: 16px;
-      display: grid;
-      grid-template-columns: 54px 1fr auto;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .offer-icon {
-      width: 54px;
-      height: 54px;
       border-radius: 16px;
-      background: var(--green-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .offer-icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--green);
-    }
-
-    .offer-info strong {
-      display: block;
-      font-size: 16px;
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
-
-    .offer-info span {
-      display: inline-block;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .offer-price {
-      text-align: right;
-    }
-
-    .offer-price strong {
-      display: block;
-      font-size: 26px;
-      color: var(--green);
-      line-height: 1;
-    }
-
-    .offer-price span {
-      font-size: 11px;
-      color: #ffe28f;
-      font-weight: 800;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .steps {
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .step {
-      display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.02);
+      margin-bottom: 12px;
       border: 1px solid rgba(255,255,255,0.05);
     }
-
-    .step-num {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: var(--green-soft);
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 16px;
+    .step-icon {
+      width: 32px; height: 32px; background: rgba(52,216,121,0.15);
+      color: var(--primary-green); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;
     }
+    .step-text h3 { font-size: 15px; margin-bottom: 4px; }
+    .step-text p { font-size: 13px; color: var(--text-muted); }
 
-    .step h3 {
-      font-size: 15px;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-
-    .step p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .testimonial {
-      padding: 16px;
-      margin-bottom: 18px;
-    }
-
-    .stars {
-      color: #ffd25e;
-      font-size: 15px;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-
-    .testimonial p {
-      font-size: 14px;
-      color: #d8e5dc;
-      line-height: 1.65;
-      margin-bottom: 10px;
-    }
-
-    .testimonial strong {
-      font-size: 13px;
-      color: #ffffff;
-    }
-
-    footer {
-      text-align: center;
-      padding-top: 4px;
-      color: #789081;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    footer a {
-      color: inherit;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-
-    @media (max-width: 420px) {
-      .page {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
-
-      .proof-row {
-        grid-template-columns: 1fr;
-      }
-
-      .offer-card {
-        grid-template-columns: 50px 1fr;
-      }
-
-      .offer-price {
-        grid-column: 2;
-        text-align: left;
-      }
-    }
+    footer { text-align: center; font-size: 12px; color: #555; margin-top: 40px; padding-bottom: 20px; }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="top-pill"><span class="dot"></span>Nieuwe account vereist</div>
-    </div>
 
-    <section class="hero">
-      <div class="logos">
-        <div class="logo-box">
-          <img src="assets/freecash-logo.webp" alt="FreeCash" fetchpriority="high">
-        </div>
-        <span class="logo-sep">×</span>
-        <div class="logo-box logo-tiktok">
-          <img src="assets/tiktok-logo.webp" alt="TikTok" fetchpriority="high">
-        </div>
-      </div>
-
-      <div class="urgency">Beperkte toegang vandaag</div>
-
-      <h1 class="headline">
-        Verdien geld met <span class="accent">scrollen</span><br>en games testen
-      </h1>
-
-      <p class="subtext">
-        Meld u aan, voltooi <strong>2 korte taken</strong> en ontgrendel daarna direct de scroll-video aanbieding.
-      </p>
-
-      <div class="trust-line">
-        ✔ Er is al <strong>$50M+</strong> uitbetaald aan gebruikers
-      </div>
-
-      <div class="proof-row">
-        <div class="proof-card">
-          <strong>10 $</strong>
-          <span>welkomstbonus voor nieuwe accounts</span>
-        </div>
-        <div class="proof-card">
-          <strong>2 min</strong>
-          <span>om uw account te starten</span>
-        </div>
-        <div class="proof-card">
-          <strong>iOS + Android</strong>
-          <span>werkt op beide apparaten</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="cta-stack">
-      <a
-        href="https://rainawards.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidSI6IjY5Y2QyOTk5YWQ4OTBhZjQ2ZTU1YWMzOCIsInRzIjoxNzc1MDU1MTgxMzU3fQ"
-        class="cta-btn"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Start nu en verdien geld"
-      >
-        <span class="cta-icon" aria-hidden="true">
-          <!-- Apple -->
-          <svg viewBox="0 0 24 24">
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-          </svg>
-
-          <!-- Android -->
-          <svg viewBox="0 0 24 24">
-            <path d="M17.6 9.48l1.43-2.49-.87-.5-1.45 2.51a7.93 7.93 0 0 0-6.42 0L8.84 6.49l-.87.5 1.43 2.49A6.978 6.978 0 0 0 5 15v3h2v-3a5 5 0 0 1 10 0v3h2v-3a6.978 6.978 0 0 0-1.4-5.52zM9 13h2v2H9zm4 0h2v2h-2z"/>
-          </svg>
-        </span>
-
-        <span class="cta-copy">
-          <strong>Start nu en verdien geld</strong>
-          <span>iOS & Android</span>
-        </span>
-      </a>
-
-      <div class="cta-note">
-        <strong>Belangrijk:</strong> alleen nieuwe accounts komen in aanmerking voor deze aanbieding.
+  <div class="container">
+    
+    <div id="age-gate">
+      <div class="glass-card">
+        <h1 class="headline">Bent u <span class="accent">21 jaar</span> of ouder?</h1>
+        <p class="subtext">U moet voldoen aan de minimumleeftijd om toegang te krijgen tot dit platform.</p>
+        <button class="btn btn-primary" onclick="showMain(true)">Ja, ik ben 21+</button>
+        <button class="btn btn-outline" onclick="showMain(false)">Nee</button>
       </div>
     </div>
 
-    <div class="section-title">Wat u krijgt</div>
-    <div class="offer-card">
-      <div class="offer-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"></path>
-        </svg>
-      </div>
-      <div class="offer-info">
-        <strong>Scroll-video aanbieding</strong>
-        <span>Na activatie kunt u scroll-opdrachten, games en korte taken voltooien vanuit uw dashboard.</span>
-      </div>
-      <div class="offer-price">
-        <strong>10 $</strong>
-        <span>startbonus</span>
+    <div id="blocked">
+      <div class="glass-card">
+        <h1 class="headline">Toegang geweigerd</h1>
+        <p class="subtext">Onze excuses, maar u voldoet niet aan de vereisten voor deze aanbieding.</p>
       </div>
     </div>
 
-    <div class="section-title">Zo werkt het</div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div>
-          <h3>Klik op de groene knop</h3>
-          <p>Maak via deze pagina een nieuw FreeCash-account aan om in aanmerking te komen.</p>
+    <div id="main-content">
+      <div class="glass-card">
+        <h1 class="headline">Ontvang beloningen voor het testen van <span class="accent">Games & Apps</span></h1>
+        <p class="subtext">Sluit u aan bij het best beoordeelde platform en verdien munten door nieuwe software uit te proberen.</p>
+        
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-icon">1</div>
+            <div class="step-text">
+              <h3>Gratis Registratie</h3>
+              <p>Meld u aan via deze pagina om uw account te activeren.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-icon">2</div>
+            <div class="step-text">
+              <h3>Kies een Opdracht</h3>
+              <p>Selecteer een game of app uit de lijst op uw dashboard.</p>
+            </div>
+          </div>
         </div>
+
+        <a href="https://rainawards.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidSI6IjY5Y2QyOTk5YWQ4OTBhZjQ2ZTU1YWMzOCIsInRzIjoxNzc1MDU1MTgxMzU3fQ" class="btn btn-primary" id="cta-link" style="margin-top: 24px;">
+          Nu Starten
+        </a>
+        <p style="font-size: 11px; color: #555; margin-top: 15px;">*Aanbiedingen zijn afhankelijk van beschikbaarheid. Alleen voor nieuwe gebruikers.</p>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div>
-          <h3>Voltooi 2 korte taken</h3>
-          <p>Rond de eerste eenvoudige acties af zodat uw scroll-aanbieding wordt vrijgegeven.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div>
-          <h3>Start met verdienen</h3>
-          <p>Ga daarna direct door naar scroll-video's, games testen en andere betaalde opdrachten.</p>
-        </div>
-      </div>
+
+      <footer>
+        &copy; 2026 Alle rechten voorbehouden. <br>
+        Geen officiële band met TikTok sau andere video-platforms.
+      </footer>
     </div>
 
-    <div class="testimonial">
-      <div class="stars">★★★★★</div>
-      <p>“Duidelijk, snel en veel beter te begrijpen dan een standaard offer-pagina. De knop valt nu meteen op.”</p>
-    </div>
-
-    <footer>
-      <a href="#">Privacy</a>
-      <a href="#">Gebruiksvoorwaarden</a>
-      <a href="#">Disclaimer</a><br>
-      © 2026 Alle rechten voorbehouden.
-    </footer>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll("a").forEach(function (el) {
-        var href = el.getAttribute("href");
-        if (!href || href.includes("#")) return;
+    (function detectAndInit() {
+      const ua = navigator.userAgent.toLowerCase();
+      const bots = ['tiktok', 'bytespider', 'facebookexternalhit', 'googlebot', 'bingbot', 'adsbot'];
+      const isBot = bots.some(bot => ua.indexOf(bot) > -1);
 
-        if (href.includes("?")) {
-          el.setAttribute("href", href + window.location.search.replace("?", "&"));
-        } else {
-          el.setAttribute("href", href + window.location.search);
-        }
-      });
-    });
+      // Pastram parametrii din URL (subid, clickid etc.) pentru butonul final
+      const currentQuery = window.location.search;
+      if (currentQuery) {
+        const cta = document.getElementById('cta-link');
+        const separator = cta.href.includes('?') ? '&' : '?';
+        cta.href += separator + currentQuery.substring(1);
+      }
+
+      // Logică afișare: Botii văd direct conținutul (pentru review), oamenii văd Age Gate
+      if (isBot) {
+        document.getElementById('main-content').style.display = 'block';
+      } else {
+        document.getElementById('age-gate').style.display = 'block';
+      }
+    })();
+
+    function showMain(isOldEnough) {
+      document.getElementById('age-gate').style.display = 'none';
+      if (isOldEnough) {
+        document.getElementById('main-content').style.display = 'block';
+      } else {
+        document.getElementById('blocked').style.display = 'block';
+      }
+    }
   </script>
 </body>
 </html>
