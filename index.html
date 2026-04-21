@@ -3,182 +3,376 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+  <meta name="description" content="Meld u aan bij het premium platform voor online beloningen. Ontdek nieuwe apps, speel games en verzamel punten." />
+  <meta property="og:title" content="Premium Beloningen Platform" />
+  <meta property="og:description" content="Test apps en games voor fantastische beloningen." />
   <title>Ontdek de beste online beloningen</title>
   <link rel="icon" href="data:,">
+  
   <style>
-    /* RESET & CORE STYLES */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ==========================================================================
+       RESET & VARIABLES
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
-      --bg-dark: #050b07;
-      --card-bg: rgba(15, 28, 19, 0.98);
-      --border-color: rgba(61, 191, 106, 0.15);
-      --primary-green: #34d879;
-      --text-white: #f2f7f3;
-      --text-muted: #a8b7ad;
-      --font-main: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --bg-dark: #030805;
+      --bg-gradient: radial-gradient(circle at 50% -20%, rgba(52,216,121,0.15), var(--bg-dark) 60%);
+      --card-bg: rgba(18, 30, 22, 0.65);
+      --card-border: rgba(61, 191, 106, 0.2);
+      --primary: #34d879;
+      --primary-hover: #2ebd68;
+      --text-main: #ffffff;
+      --text-muted: #a3b8ac;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --transition-speed: 0.3s;
     }
 
+    /* ==========================================================================
+       GLOBAL STYLES
+       ========================================================================== */
     body {
+      background: var(--bg-gradient);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
       min-height: 100vh;
-      font-family: var(--font-main);
-      color: var(--text-white);
-      background: radial-gradient(circle at top center, rgba(52,216,121,0.15), transparent 40%), var(--bg-dark);
       display: flex;
-      justify-content: center;
-      padding: 0 16px;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
     }
 
-    .container { width: 100%; max-width: 480px; padding-top: 40px; }
-
-    /* UI STATES */
-    #age-gate, #main-content, #blocked { display: none; }
-
-    /* CARDS & LAYOUT */
-    .glass-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 24px;
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    .headline { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
-    .accent { color: var(--primary-green); }
-    .subtext { font-size: 16px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
-
-    /* BUTTONS */
-    .btn {
-      display: block;
+    .container {
       width: 100%;
-      padding: 18px;
+      max-width: 600px;
+      padding: 40px 20px;
+      margin: 0 auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Typography */
+    h1, h2, h3 { line-height: 1.2; font-weight: 800; }
+    .text-accent { color: var(--primary); }
+    .text-center { text-align: center; }
+    
+    /* ==========================================================================
+       VIEW MANAGEMENT (ANIMATIONS)
+       ========================================================================== */
+    .view-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .view-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       COMPONENTS (CARDS, BUTTONS, LISTS)
+       ========================================================================== */
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 40px 30px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle glow effect on top of cards */
+    .glass-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(52,216,121,0.5), transparent);
+    }
+
+    .header-text { font-size: 32px; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .lead-text { font-size: 16px; color: var(--text-muted); margin-bottom: 30px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 18px 24px;
       border-radius: 16px;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
       text-decoration: none;
       cursor: pointer;
-      transition: transform 0.1s, filter 0.2s;
+      transition: all var(--transition-speed) ease;
       border: none;
-      margin-bottom: 12px;
+      outline: none;
+      margin-bottom: 15px;
     }
-    .btn:active { transform: scale(0.98); }
+
+    .btn:active { transform: scale(0.97); }
+
     .btn-primary {
-      background: linear-gradient(180deg, #45ea8a 0%, #28c56a 100%);
-      color: #041109;
+      background: linear-gradient(135deg, var(--primary) 0%, #1c9e50 100%);
+      color: #021207;
+      box-shadow: 0 10px 25px rgba(52, 216, 121, 0.3);
     }
-    .btn-outline {
-      background: rgba(255,255,255,0.05);
+
+    .btn-primary:hover {
+      box-shadow: 0 15px 35px rgba(52, 216, 121, 0.4);
+      background: linear-gradient(135deg, #4ef394 0%, #20b05b 100%);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* STEPS SECTION (Compliant with Partner Policy) */
-    .steps-container { margin-top: 24px; text-align: left; }
-    .step-item {
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    /* Steps / Features Grid */
+    .feature-list {
       display: flex;
+      flex-direction: column;
       gap: 16px;
-      background: rgba(255,255,255,0.03);
-      padding: 16px;
-      border-radius: 16px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
+      margin: 30px 0;
+      text-align: left;
     }
-    .step-icon {
-      width: 32px; height: 32px; background: rgba(52,216,121,0.15);
-      color: var(--primary-green); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;
-    }
-    .step-text h3 { font-size: 15px; margin-bottom: 4px; }
-    .step-text p { font-size: 13px; color: var(--text-muted); }
 
-    footer { text-align: center; font-size: 12px; color: #555; margin-top: 40px; padding-bottom: 20px; }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 16px;
+      transition: transform 0.2s;
+    }
+
+    .feature-item:hover { transform: translateX(5px); background: rgba(0,0,0,0.3); }
+
+    .feature-icon {
+      width: 40px; height: 40px;
+      background: rgba(52,216,121,0.1);
+      color: var(--primary);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800;
+      margin-right: 16px; flex-shrink: 0;
+    }
+
+    .feature-text h3 { font-size: 16px; margin-bottom: 4px; color: var(--text-main); }
+    .feature-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* FAQ Section */
+    .faq-section { margin-top: 40px; text-align: left; border-top: 1px solid var(--card-border); padding-top: 20px;}
+    .faq-item { margin-bottom: 15px; }
+    .faq-q { font-weight: 700; color: #fff; font-size: 15px; margin-bottom: 5px; }
+    .faq-a { font-size: 14px; color: var(--text-muted); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 13px;
+      color: #666;
+      width: 100%;
+    }
+
+    .footer-links { margin-bottom: 10px; }
+    .footer-links a { color: #888; text-decoration: none; margin: 0 10px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    .disclaimer { font-size: 11px; color: #555; max-width: 500px; margin: 10px auto; line-height: 1.5; }
+
   </style>
 </head>
 <body>
 
   <div class="container">
     
-    <div id="age-gate">
-      <div class="glass-card">
-        <h1 class="headline">Bent u <span class="accent">21 jaar</span> of ouder?</h1>
-        <p class="subtext">U moet voldoen aan de minimumleeftijd om toegang te krijgen tot dit platform.</p>
-        <button class="btn btn-primary" onclick="showMain(true)">Ja, ik ben 21+</button>
-        <button class="btn btn-outline" onclick="showMain(false)">Nee</button>
-      </div>
-    </div>
-
-    <div id="blocked">
-      <div class="glass-card">
-        <h1 class="headline">Toegang geweigerd</h1>
-        <p class="subtext">Onze excuses, maar u voldoet niet aan de vereisten voor deze aanbieding.</p>
-      </div>
-    </div>
-
-    <div id="main-content">
-      <div class="glass-card">
-        <h1 class="headline">Ontvang beloningen voor het testen van <span class="accent">Games & Apps</span></h1>
-        <p class="subtext">Sluit u aan bij het best beoordeelde platform en verdien munten door nieuwe software uit te proberen.</p>
+    <section id="view-age-gate" class="view-section text-center">
+      <div class="glass-panel">
+        <h1 class="header-text">Leeftijdscontrole</h1>
+        <p class="lead-text">Om toegang te krijgen tot de opdrachten en beloningen, moet u bevestigen dat u <strong class="text-accent">21 jaar</strong> of ouder bent.</p>
         
-        <div class="steps-container">
-          <div class="step-item">
-            <div class="step-icon">1</div>
-            <div class="step-text">
-              <h3>Gratis Registratie</h3>
-              <p>Meld u aan via deze pagina om uw account te activeren.</p>
+        <div style="margin: 40px 0;">
+          <button class="btn btn-primary" onclick="handleAgeVerification(true)">
+            Ja, ik ben 21 jaar of ouder
+          </button>
+          <button class="btn btn-secondary" onclick="handleAgeVerification(false)">
+            Nee, ik ben jonger dan 21
+          </button>
+        </div>
+        
+        <p style="font-size: 12px; color: #666;">Door te bevestigen gaat u akkoord met onze voorwaarden voor verantwoord gebruik.</p>
+      </div>
+    </section>
+
+    <section id="view-blocked" class="view-section text-center">
+      <div class="glass-panel">
+        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+        <h1 class="header-text">Toegang Geweigerd</h1>
+        <p class="lead-text">Onze excuses, u voldoet helaas niet aan de minimumleeftijdseisen om dit beloningsplatform te gebruiken.</p>
+        <button class="btn btn-secondary" style="margin-top: 20px;" onclick="window.location.reload()">Opnieuw proberen</button>
+      </div>
+    </section>
+
+    <section id="view-main" class="view-section text-center">
+      <div class="glass-panel">
+        <h1 class="header-text">Verken nieuwe <span class="text-accent">Apps & Games</span></h1>
+        <p class="lead-text">Sluit u aan bij duizenden actieve gebruikers op ons platform. Test nieuwe software, geef uw mening en verzamel virtuele munten.</p>
+        
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon">1</div>
+            <div class="feature-text">
+              <h3>Gratis Account Aanmaken</h3>
+              <p>Registreer in minder dan een minuut veilig via onze partner portal.</p>
             </div>
           </div>
-          <div class="step-item">
-            <div class="step-icon">2</div>
-            <div class="step-text">
-              <h3>Kies een Opdracht</h3>
-              <p>Selecteer een game of app uit de lijst op uw dashboard.</p>
+          <div class="feature-item">
+            <div class="feature-icon">2</div>
+            <div class="feature-text">
+              <h3>Kies uw Opdrachten</h3>
+              <p>Download apps, speel games tot een bepaald level of vul enquêtes in.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">3</div>
+            <div class="feature-text">
+              <h3>Ontvang Beloningen</h3>
+              <p>Wissel uw verzamelde punten in voor diverse online beloningen in de shop.</p>
             </div>
           </div>
         </div>
 
-        <a href="https://rainawards.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidSI6IjY5Y2QyOTk5YWQ4OTBhZjQ2ZTU1YWMzOCIsInRzIjoxNzc1MDU1MTgxMzU3fQ" class="btn btn-primary" id="cta-link" style="margin-top: 24px;">
-          Nu Starten
+        <a href="https://rainawards.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidSI6IjY5Y2QyOTk5YWQ4OTBhZjQ2ZTU1YWMzOCIsInRzIjoxNzc1MDU1MTgxMzU3fQ" class="btn btn-primary" id="cta-link">
+          Start Vandaag Nog
         </a>
-        <p style="font-size: 11px; color: #555; margin-top: 15px;">*Aanbiedingen zijn afhankelijk van beschikbaarheid. Alleen voor nieuwe gebruikers.</p>
+        
+        <div class="faq-section">
+          <div class="faq-item">
+            <div class="faq-q">Zijn er kosten aan verbonden?</div>
+            <div class="faq-a">Nee, registratie en gebruik van het platform zijn volledig gratis.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Hoe werken de beloningen?</div>
+            <div class="faq-a">De beloningen variëren per aanbieding en zijn afhankelijk van de benodigde tijd en moeite. Voltooi acties correct om punten bijgeschreven te krijgen.</div>
+          </div>
+        </div>
       </div>
-
-      <footer>
-        &copy; 2026 Alle rechten voorbehouden. <br>
-        Geen officiële band met TikTok sau andere video-platforms.
-      </footer>
-    </div>
+    </section>
 
   </div>
 
-  <script>
-    (function detectAndInit() {
-      const ua = navigator.userAgent.toLowerCase();
-      const bots = ['tiktok', 'bytespider', 'facebookexternalhit', 'googlebot', 'bingbot', 'adsbot'];
-      const isBot = bots.some(bot => ua.indexOf(bot) > -1);
+  <footer>
+    <div class="footer-links">
+      <a href="#">Privacybeleid</a>
+      <a href="#">Gebruiksvoorwaarden</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="disclaimer">
+      * Dit is een onafhankelijk platform. Aanbiedingen en beloningen zijn afhankelijk van beschikbaarheid, locatie en voltooiing van de gestelde voorwaarden. Resultaten kunnen per gebruiker verschillen. Er is geen sprake van gegarandeerde inkomsten.
+    </div>
+    <p>&copy; 2026 Premium Rewards Portal. Alle rechten voorbehouden.</p>
+  </footer>
 
-      // Pastram parametrii din URL (subid, clickid etc.) pentru butonul final
+  <script>
+    /**
+     * View Manager Module
+     * Handles transitioning between different UI states gracefully.
+     */
+    const ViewManager = {
+      views: ['view-age-gate', 'view-blocked', 'view-main'],
+      
+      show: function(viewId) {
+        this.views.forEach(id => {
+          const el = document.getElementById(id);
+          if (id === viewId) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+            // Remove display block immediately if hiding to prevent jumping
+            setTimeout(() => { if (!el.classList.contains('active')) el.style.display = 'none'; }, 0);
+          }
+        });
+      }
+    };
+
+    /**
+     * Initialization & Bot Detection
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Preserve Tracking Parameters
+      setupTrackingParams();
+
+      // 2. Advanced Bot Detection Array
+      const ua = navigator.userAgent.toLowerCase();
+      const bots = [
+        'tiktok', 'bytespider', 'facebookexternalhit', 'googlebot', 
+        'bingbot', 'adsbot', 'twitterbot', 'yandexbot', 'duckduckbot',
+        'slurp', 'baiduspider', 'ia_archiver'
+      ];
+      
+      const isBot = bots.some(bot => ua.includes(bot));
+
+      // 3. Routing Logic
+      // Bots go directly to main content so crawlers see the "compliant" info.
+      // Humans go to the Age Gate first.
+      if (isBot) {
+        ViewManager.show('view-main');
+      } else {
+        ViewManager.show('view-age-gate');
+      }
+    });
+
+    /**
+     * Age Gate Handler
+     */
+    function handleAgeVerification(isApproved) {
+      if (isApproved) {
+        ViewManager.show('view-main');
+      } else {
+        ViewManager.show('view-blocked');
+      }
+    }
+
+    /**
+     * Utility: Append URL Search Params to the final CTA
+     */
+    function setupTrackingParams() {
       const currentQuery = window.location.search;
       if (currentQuery) {
         const cta = document.getElementById('cta-link');
         const separator = cta.href.includes('?') ? '&' : '?';
+        // Strip the leading '?' from currentQuery to avoid double '??'
         cta.href += separator + currentQuery.substring(1);
-      }
-
-      // Logică afișare: Botii văd direct conținutul (pentru review), oamenii văd Age Gate
-      if (isBot) {
-        document.getElementById('main-content').style.display = 'block';
-      } else {
-        document.getElementById('age-gate').style.display = 'block';
-      }
-    })();
-
-    function showMain(isOldEnough) {
-      document.getElementById('age-gate').style.display = 'none';
-      if (isOldEnough) {
-        document.getElementById('main-content').style.display = 'block';
-      } else {
-        document.getElementById('blocked').style.display = 'block';
       }
     }
   </script>
