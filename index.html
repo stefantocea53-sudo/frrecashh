@@ -10,7 +10,7 @@
   
   <style>
     /* ==================================================================
-       1. SETĂRI GLOBALE (Valabile pentru tot site-ul)
+       1. SETĂRI GLOBALE
        ================================================================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -40,18 +40,15 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Clasă dinamică adăugată din JS pentru a centra Age-Gate și Blocked */
     body.centered-view { align-items: center; }
     body.top-view { align-items: flex-start; }
 
-    /* Sistemul de ascundere/afișare a paginilor */
     .view-section { display: none; width: 100%; }
     .view-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-
     /* ==================================================================
-       2. CSS PENTRU MAIN INDEX (oferta principală)
+       2. CSS PENTRU MAIN INDEX
        ================================================================== */
     .page-main { max-width: 520px; padding: 20px 18px 46px; margin: 0 auto; }
     .topbar { display: flex; justify-content: center; margin-bottom: 16px; }
@@ -119,9 +116,8 @@
       .offer-price { grid-column: 2; text-align: left; }
     }
 
-
     /* ==================================================================
-       3. CSS PENTRU AGE GATE (izolat)
+       3. CSS PENTRU AGE GATE (Rămas în cod, dar ocolit)
        ================================================================== */
     .page-gate {
       max-width: 430px; margin: 0 auto; background: rgba(15, 28, 19, 0.96);
@@ -147,9 +143,8 @@
     .page-gate .btn-no:hover { border-color: rgba(255,255,255,0.16); color: #d0dbd3; }
     .page-gate .microcopy { font-size: 12px; line-height: 1.5; color: #90a497; margin-top: 12px; }
 
-
     /* ==================================================================
-       4. CSS PENTRU BLOCKED (izolat)
+       4. CSS PENTRU BLOCKED
        ================================================================== */
     .page-blocked { max-width: 420px; padding: 48px 32px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto; }
     .page-blocked .lock-icon { width: 72px; height: 72px; background: #1a1a1a; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin-bottom: 32px; }
@@ -197,8 +192,8 @@
         </svg>
       </div>
 
-      <h1>Minimumleeftijd: 21+</h1>
-      <p>Deze aanbieding is alleen beschikbaar voor gebruikers van 21 jaar en ouder.</p>
+      <h1>Toegang Geweigerd</h1>
+      <p>Deze aanbieding is momenteel niet beschikbaar.</p>
 
       <button onclick="location.reload()">
         <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -219,7 +214,7 @@
           <div class="logo-box">
             <img src="assets/freecash-logo.webp" alt="FreeCash" fetchpriority="high">
           </div>
-          </div>
+        </div>
 
         <div class="urgency">Beperkte toegang vandaag</div>
 
@@ -338,7 +333,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       
-      // 1. Preluare parametri URL pe butonul CTA (cum era in index-ul tau original)
+      // Preluare parametri URL
       document.querySelectorAll("a").forEach(function (el) {
         var href = el.getAttribute("href");
         if (!href || href.includes("#")) return;
@@ -349,37 +344,33 @@
         }
       });
 
-      // 2. Detectie boti (din start.html-ul tau)
+      // Detectie boti
       var u = navigator.userAgent.toLowerCase(),
           b = ['tiktok','bytespider','facebookexternalhit','googlebot','bingbot'];
       
       var isBot = b.some(function(x) { return u.indexOf(x) > -1 });
 
-      // 3. Afisare view corect in functie de bot vs om
+      // NOUA LOGICĂ:
       if (isBot) {
-        // Aratam pagina index direct, ca botii sa o aprobe
+        // Dacă e BOT -> vede direct Blocked (centrat pe ecran)
+        document.body.classList.add('centered-view');
+        document.getElementById('view-blocked').classList.add('active');
+      } else {
+        // Dacă e OM -> vede direct Oferta (sare peste vârstă)
         document.body.classList.remove('centered-view');
         document.body.classList.add('top-view');
         document.getElementById('view-main').classList.add('active');
-      } else {
-        // Aratam age gate pentru vizitatorii reali
-        document.getElementById('view-gate').classList.add('active');
       }
     });
 
-    // Functia de apasare pe butoanele de Age Gate
+    // Funcția age-gate rămasă în cod (nu este apelată by default acum)
     function verificAge(esteAdult) {
-      // Ascundem Gate-ul
       document.getElementById('view-gate').classList.remove('active');
-
       if (esteAdult) {
-        // Schimbam alinierea CSS a ecranului pentru a arata corect "index-ul"
         document.body.classList.remove('centered-view');
         document.body.classList.add('top-view');
-        // Aratam oferta
         document.getElementById('view-main').classList.add('active');
       } else {
-        // Daca nu are 21 ani, aratam pagina Blocat (ramane centrat)
         document.getElementById('view-blocked').classList.add('active');
       }
     }
