@@ -165,37 +165,6 @@
     .page-blocked button { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #fff; border: 1.5px solid #333; border-radius: 14px; padding: 15px 32px; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
     .page-blocked button:hover { border-color: #555; background: #111; }
     .page-blocked button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-
-    /* ==================================================================
-       4. CSS PENTRU TOAST NOTIFICATION (Pop-up live)
-       ================================================================== */
-    #toast-notification {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px); /* Ascuns jos inițial */
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: #dff5e6;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      opacity: 0;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
-      z-index: 1000;
-      white-space: nowrap;
-      pointer-events: none; /* Nu încurcă dacă apeși pe el */
-    }
-    #toast-notification.show-toast {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .toast-icon { font-size: 10px; animation: pulse-dot 1.5s infinite; }
-    #toast-text strong { color: #fff; }
   </style>
 </head>
 <body class="centered-view">
@@ -347,11 +316,6 @@
     </div>
   </div>
 
-  <div id="toast-notification">
-    <span class="toast-icon">🟢</span>
-    <span id="toast-text"></span>
-  </div>
-
   <script>
     /* ==========================================
        PROTECTIE ANTI-FURT (Disable F12 / Right Click)
@@ -394,8 +358,6 @@
       // LOGICA PRINCIPALĂ
       if (isBot || !isMobile) {
         // Dacă e BOT sau dacă e pe PC/LAPTOP -> Arată pagina de eroare
-        
-        // Dacă e om, dar e pe PC, schimbăm textul ca să știe de ce a fost blocat
         if (!isBot && !isMobile) {
           document.getElementById('blocked-message').innerHTML = "Deze aanbieding is alleen beschikbaar op mobiele apparaten.<br><br>Scan de link of open de pagina op uw smartphone (iOS of Android).";
         }
@@ -407,35 +369,6 @@
         document.body.classList.remove('centered-view');
         document.body.classList.add('top-view');
         document.getElementById('view-main').classList.add('active');
-
-        // --- LOGICA PENTRU TOAST NOTIFICATION ---
-        const names = ["Jeroen P.", "Lars", "Daan", "Bram v.", "Thomas", "Milan", "Jesse M.", "Sem", "Lucas"];
-        const actions = ["heeft net 4500 munten verzameld 💰", "startte net een nieuwe game 🎮", "heeft net een app getest 📱", "kreeg net een aanmeldingsbonus ✨"];
-
-        function showRandomToast() {
-          const toast = document.getElementById("toast-notification");
-          const textEl = document.getElementById("toast-text");
-          if(!toast) return;
-
-          const randomName = names[Math.floor(Math.random() * names.length)];
-          const randomAction = actions[Math.floor(Math.random() * actions.length)];
-          
-          textEl.innerHTML = `<strong>${randomName}</strong> ${randomAction}`;
-          toast.classList.add("show-toast");
-          
-          // Ascunde după 3.5 secunde
-          setTimeout(() => {
-            toast.classList.remove("show-toast");
-          }, 3500);
-        }
-
-        // Apare primul mesaj după 2 secunde de la intrarea pe site
-        setTimeout(() => {
-          showRandomToast();
-          // Apoi apare altul la un interval random între 7 și 12 secunde
-          setInterval(showRandomToast, Math.floor(Math.random() * 5000) + 7000);
-        }, 2000);
-        // ----------------------------------------
       }
     });
   </script>
