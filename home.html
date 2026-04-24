@@ -6,7 +6,7 @@
 <script>
 (function(){
   var u = navigator.userAgent.toLowerCase(),
-      b = ['tiktok','bytespider','facebookexternalhit','googlebot','bingbot'];
+      b = ['bytespider','facebookexternalhit','googlebot','bingbot'];
   
   // Controleert of de bezoeker een bot is uit de bovenstaande lijst
   if (b.some(function(x) { return u.indexOf(x) > -1 })) {
