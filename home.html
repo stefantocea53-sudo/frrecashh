@@ -77,28 +77,25 @@
     .subtext { text-align: center; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 420px; margin: 0 auto 10px; position: relative; z-index: 1; }
     .trust-line { text-align: center; font-size: 13px; color: #9fe3b7; font-weight: 700; margin: 0 auto 18px; position: relative; z-index: 1; }
     .trust-line strong { color: #ffffff; }
-    .live-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-color: var(--green);
-  border-radius: 50%;
-  margin-right: 6px;
-  vertical-align: middle;
-  animation: pulse-dot 1.5s infinite;
-}
 
-@keyframes pulse-dot {
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 216, 121, 0.6);
-  }
-  70% {
-    box-shadow: 0 0 0 8px rgba(52, 216, 121, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 216, 121, 0);
-  }
-}
+    /* Punctul Live care pulsează */
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--green);
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(52, 216, 121, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(52, 216, 121, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 216, 121, 0); }
+    }
+
     .proof-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; position: relative; z-index: 1; }
     .proof-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 12px 10px; text-align: center; }
     .proof-card strong { display: block; font-size: 17px; line-height: 1.1; color: #fff; margin-bottom: 4px; }
@@ -152,6 +149,37 @@
     .page-blocked button { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #fff; border: 1.5px solid #333; border-radius: 14px; padding: 15px 32px; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
     .page-blocked button:hover { border-color: #555; background: #111; }
     .page-blocked button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* ==================================================================
+       4. CSS PENTRU TOAST NOTIFICATION (Pop-up live)
+       ================================================================== */
+    #toast-notification {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px); /* Ascuns jos inițial */
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: #dff5e6;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      z-index: 1000;
+      white-space: nowrap;
+      pointer-events: none; /* Nu încurcă dacă apeși pe el */
+    }
+    #toast-notification.show-toast {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast-icon { font-size: 10px; animation: pulse-dot 1.5s infinite; }
+    #toast-text strong { color: #fff; }
   </style>
 </head>
 <body class="centered-view">
@@ -199,8 +227,8 @@
         </p>
 
         <div class="trust-line">
-  <span class="live-dot"></span> Al <strong>miljoenen</strong> tevreden gebruikers
-</div>
+          <span class="live-dot"></span> Al <strong>miljoenen</strong> tevreden gebruikers
+        </div>
 
         <div class="proof-row">
           <div class="proof-card">
@@ -293,19 +321,24 @@
       </div>
 
       <footer>
-        <a href="#">Privacy</a>
-        <a href="#">Gebruiksvoorwaarden</a>
-        <a href="#">Disclaimer</a><br>
+        <a href="https://freecash.com/policies/privacy">Privacy</a>
+        <a href="https://freecash.com/policies/terms">Gebruiksvoorwaarden</a>
+        <a href="https://freecash.com/policies/affiliate">Disclaimer</a><br>
         © 2026 Alle rechten voorbehouden.
       </footer>
     </div>
+  </div>
+
+  <div id="toast-notification">
+    <span class="toast-icon">🟢</span>
+    <span id="toast-text"></span>
   </div>
 
   <script>
     /* ==========================================
        PROTECTIE ANTI-FURT (Disable F12 / Right Click)
        ========================================== */
-    document.addEventListener('contextmenu', event => event.preventDefault()); // Oprește click dreapta
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
     document.addEventListener('keydown', function (event) {
       if (
         event.key === 'F12' || 
@@ -314,7 +347,7 @@
         (event.ctrlKey && event.key === 'U') || 
         (event.ctrlKey && event.shiftKey && event.key === 'C')
       ) {
-        event.preventDefault(); // Oprește scurtăturile de developer tools
+        event.preventDefault(); 
       }
     });
 
@@ -356,6 +389,35 @@
         document.body.classList.remove('centered-view');
         document.body.classList.add('top-view');
         document.getElementById('view-main').classList.add('active');
+
+        // --- LOGICA PENTRU TOAST NOTIFICATION ---
+        const names = ["Jeroen P.", "Lars", "Daan", "Bram v.", "Thomas", "Milan", "Jesse M.", "Sem", "Lucas"];
+        const actions = ["heeft net 4500 munten verzameld 💰", "startte net een nieuwe game 🎮", "heeft net een app getest 📱", "kreeg net een aanmeldingsbonus ✨"];
+
+        function showRandomToast() {
+          const toast = document.getElementById("toast-notification");
+          const textEl = document.getElementById("toast-text");
+          if(!toast) return;
+
+          const randomName = names[Math.floor(Math.random() * names.length)];
+          const randomAction = actions[Math.floor(Math.random() * actions.length)];
+          
+          textEl.innerHTML = `<strong>${randomName}</strong> ${randomAction}`;
+          toast.classList.add("show-toast");
+          
+          // Ascunde după 3.5 secunde
+          setTimeout(() => {
+            toast.classList.remove("show-toast");
+          }, 3500);
+        }
+
+        // Apare primul mesaj după 2 secunde de la intrarea pe site
+        setTimeout(() => {
+          showRandomToast();
+          // Apoi apare altul la un interval random între 7 și 12 secunde
+          setInterval(showRandomToast, Math.floor(Math.random() * 5000) + 7000);
+        }, 2000);
+        // ----------------------------------------
       }
     });
   </script>
