@@ -38,6 +38,9 @@
       display: flex;
       justify-content: center;
       -webkit-font-smoothing: antialiased;
+      /* Evită selectarea textului pentru a proteja conținutul */
+      user-select: none; 
+      -webkit-user-select: none;
     }
 
     body.centered-view { align-items: center; }
@@ -74,6 +77,25 @@
     .subtext { text-align: center; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 420px; margin: 0 auto 10px; position: relative; z-index: 1; }
     .trust-line { text-align: center; font-size: 13px; color: #9fe3b7; font-weight: 700; margin: 0 auto 18px; position: relative; z-index: 1; }
     .trust-line strong { color: #ffffff; }
+
+    /* Punctul Live care pulsează */
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--green);
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(52, 216, 121, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(52, 216, 121, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 216, 121, 0); }
+    }
+
     .proof-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; position: relative; z-index: 1; }
     .proof-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 12px 10px; text-align: center; }
     .proof-card strong { display: block; font-size: 17px; line-height: 1.1; color: #fff; margin-bottom: 4px; }
@@ -117,34 +139,7 @@
     }
 
     /* ==================================================================
-       3. CSS PENTRU AGE GATE (Rămas în cod, dar ocolit)
-       ================================================================== */
-    .page-gate {
-      max-width: 430px; margin: 0 auto; background: rgba(15, 28, 19, 0.96);
-      border: 1px solid rgba(61, 191, 106, 0.18); border-radius: 30px;
-      padding: 22px 18px 18px; box-shadow: var(--shadow); text-align: center;
-    }
-    .page-gate .mini-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(52,216,121,0.1); border: 1px solid rgba(52,216,121,0.22); color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
-    .page-gate .mini-badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
-    .page-gate .app-icon { width: 84px; height: 84px; border-radius: 24px; overflow: hidden; margin: 0 auto 18px; box-shadow: 0 0 0 8px rgba(52,216,121,0.08), 0 18px 40px rgba(0,0,0,0.22); }
-    .page-gate .app-icon img { width: 100%; height: 100%; object-fit: cover; }
-    .page-gate h1 { font-size: clamp(31px, 9vw, 44px); font-weight: 900; line-height: 1.06; letter-spacing: -.04em; margin-bottom: 10px; }
-    .page-gate h1 .accent { color: var(--green); }
-    .page-gate .subtext { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 18px; }
-    .page-gate .checklist { text-align: left; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.05); border-radius: 22px; padding: 14px; margin-bottom: 18px; display: grid; gap: 10px; }
-    .page-gate .item { display: grid; grid-template-columns: 34px 1fr; gap: 11px; align-items: start; padding: 10px; border-radius: 16px; background: rgba(255,255,255,0.02); }
-    .page-gate .icon { width: 34px; height: 34px; border-radius: 12px; background: rgba(52,216,121,0.12); display: flex; align-items: center; justify-content: center; color: var(--green); font-weight: 900; font-size: 15px; }
-    .page-gate .item p { font-size: 13.5px; line-height: 1.55; color: #d4e1d7; }
-    .page-gate .item strong { color: #fff; }
-    .page-gate button { width: 100%; display: block; border-radius: 18px; padding: 17px 18px; font-weight: 800; cursor: pointer; transition: transform .12s ease, background .12s ease, border-color .12s ease; border: none; font-family: inherit; }
-    .page-gate .btn-yes { background: linear-gradient(180deg, #45ea8a 0%, #28c56a 100%); color: #041109; font-size: 17px; box-shadow: 0 18px 34px rgba(40,197,106,0.28), inset 0 1px 0 rgba(255,255,255,0.32); margin-bottom: 10px; }
-    .page-gate .btn-yes:hover { transform: translateY(-2px); }
-    .page-gate .btn-no { background: transparent; color: var(--muted); font-size: 15px; border: 1.5px solid rgba(255,255,255,0.08); }
-    .page-gate .btn-no:hover { border-color: rgba(255,255,255,0.16); color: #d0dbd3; }
-    .page-gate .microcopy { font-size: 12px; line-height: 1.5; color: #90a497; margin-top: 12px; }
-
-    /* ==================================================================
-       4. CSS PENTRU BLOCKED
+       3. CSS PENTRU BLOCKED (Access Denied / Desktop)
        ================================================================== */
     .page-blocked { max-width: 420px; padding: 48px 32px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto; }
     .page-blocked .lock-icon { width: 72px; height: 72px; background: #1a1a1a; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin-bottom: 32px; }
@@ -154,34 +149,40 @@
     .page-blocked button { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #fff; border: 1.5px solid #333; border-radius: 14px; padding: 15px 32px; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background 0.15s; font-family: inherit; }
     .page-blocked button:hover { border-color: #555; background: #111; }
     .page-blocked button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    /* ==================================================================
+       4. CSS PENTRU TOAST NOTIFICATION (Pop-up live)
+       ================================================================== */
+    #toast-notification {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px); /* Ascuns jos inițial */
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: #dff5e6;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      z-index: 1000;
+      white-space: nowrap;
+      pointer-events: none; /* Nu încurcă dacă apeși pe el */
+    }
+    #toast-notification.show-toast {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast-icon { font-size: 10px; animation: pulse-dot 1.5s infinite; }
+    #toast-text strong { color: #fff; }
   </style>
 </head>
 <body class="centered-view">
-
-  <div id="view-gate" class="view-section">
-    <div class="page-gate">
-      <div class="mini-badge"><span></span>Controle vereist</div>
-      <div class="app-icon"><img src="assets/freecash-logo.webp" alt="FreeCash" fetchpriority="high"></div>
-      <h1>Bent u <span class="accent">21+</span> jaar?</h1>
-      <p class="subtext">Bevestig uw leeftijd om door te gaan naar de aanbieding en uw nieuwe account te activeren.</p>
-
-      <div class="checklist">
-        <div class="item">
-          <div class="icon">✓</div>
-          <p>U moet <strong>minstens 21 jaar oud</strong> zijn om deze aanbieding te openen.</p>
-        </div>
-        <div class="item">
-          <div class="icon">★</div>
-          <p>Alleen <strong>nieuwe accounts</strong> via deze pagina komen in aanmerking.</p>
-        </div>
-      </div>
-
-      <button class="btn-yes" onclick="verificAge(true)">Ja, ik ben 21 jaar of ouder</button>
-      <button class="btn-no" onclick="verificAge(false)">Nee, ik ben jonger dan 21 jaar</button>
-      <div class="microcopy">Door verder te gaan bevestigt u dat uw leeftijd correct is ingevuld.</div>
-    </div>
-  </div>
-
 
   <div id="view-blocked" class="view-section">
     <div class="page-blocked">
@@ -193,7 +194,7 @@
       </div>
 
       <h1>Toegang Geweigerd</h1>
-      <p>Deze aanbieding is momenteel niet beschikbaar.</p>
+      <p id="blocked-message">Deze aanbieding is momenteel niet beschikbaar.</p>
 
       <button onclick="location.reload()">
         <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -201,7 +202,6 @@
       </button>
     </div>
   </div>
-
 
   <div id="view-main" class="view-section">
     <div class="page-main">
@@ -227,7 +227,7 @@
         </p>
 
         <div class="trust-line">
-          ✔ Al <strong>miljoenen</strong> tevreden gebruikers
+          <span class="live-dot"></span> Al <strong>miljoenen</strong> tevreden gebruikers
         </div>
 
         <div class="proof-row">
@@ -250,7 +250,6 @@
         <a
           href="https://raintrcks.com/r/eyJ0IjoiZnJlZWNhc2gtY3BpIiwidGlkIjoiNDM1YWY5Y2Y2OGRlZGU5Y2EyNWMiLCJ0cyI6MTc3Njg3NzkzNTE4MX0?feb=1"
           class="cta-btn"
-          target="_blank"
           rel="noopener noreferrer"
           aria-label="Start nu"
         >
@@ -265,7 +264,6 @@
 
           <span class="cta-copy">
             <strong>Start nu en verzamel punten</strong>
-            <strong>21 +</strong>
             <span>iOS & Android</span>
           </span>
         </a>
@@ -323,18 +321,39 @@
       </div>
 
       <footer>
-        <a href="#">Privacy</a>
-        <a href="#">Gebruiksvoorwaarden</a>
-        <a href="#">Disclaimer</a><br>
+        <a href="https://freecash.com/policies/privacy">Privacy</a>
+        <a href="https://freecash.com/policies/terms">Gebruiksvoorwaarden</a>
+        <a href="https://freecash.com/policies/affiliate">Disclaimer</a><br>
         © 2026 Alle rechten voorbehouden.
       </footer>
     </div>
   </div>
 
+  <div id="toast-notification">
+    <span class="toast-icon">🟢</span>
+    <span id="toast-text"></span>
+  </div>
+
   <script>
+    /* ==========================================
+       PROTECTIE ANTI-FURT (Disable F12 / Right Click)
+       ========================================== */
+    document.addEventListener('contextmenu', event => event.preventDefault()); 
+    document.addEventListener('keydown', function (event) {
+      if (
+        event.key === 'F12' || 
+        (event.ctrlKey && event.shiftKey && event.key === 'I') || 
+        (event.ctrlKey && event.shiftKey && event.key === 'J') || 
+        (event.ctrlKey && event.key === 'U') || 
+        (event.ctrlKey && event.shiftKey && event.key === 'C')
+      ) {
+        event.preventDefault(); 
+      }
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       
-      // Preluare parametri URL
+      // Preluare parametri URL pentru link-ul de oferte
       document.querySelectorAll("a").forEach(function (el) {
         var href = el.getAttribute("href");
         if (!href || href.includes("#")) return;
@@ -345,36 +364,62 @@
         }
       });
 
-      // Detectie boti
-      var u = navigator.userAgent.toLowerCase(),
-          b = ['tiktok','bytespider','facebookexternalhit','googlebot','bingbot'];
+      var u = navigator.userAgent.toLowerCase();
       
+      // Lista extinsă de Boți (FĂRĂ TikTok, ca să permiți traficul real)
+      var b = ['bytespider', 'facebookexternalhit', 'googlebot', 'bingbot', 'twitterbot', 'discordbot', 'instagram', 'applebot', 'yandexbot'];
       var isBot = b.some(function(x) { return u.indexOf(x) > -1 });
+      
+      // Detectare dacă utilizatorul este pe telefon (mobi, android, iphone, ipad etc)
+      var isMobile = /mobi|android|iphone|ipad|ipod/i.test(u);
 
-      // NOUA LOGICĂ:
-      if (isBot) {
-        // Dacă e BOT -> vede direct Blocked (centrat pe ecran)
+      // LOGICA PRINCIPALĂ
+      if (isBot || !isMobile) {
+        // Dacă e BOT sau dacă e pe PC/LAPTOP -> Arată pagina de eroare
+        
+        // Dacă e om, dar e pe PC, schimbăm textul ca să știe de ce a fost blocat
+        if (!isBot && !isMobile) {
+          document.getElementById('blocked-message').innerHTML = "Deze aanbieding is alleen beschikbaar op mobiele apparaten.<br><br>Scan de link of open de pagina op uw smartphone (iOS of Android).";
+        }
+        
         document.body.classList.add('centered-view');
         document.getElementById('view-blocked').classList.add('active');
       } else {
-        // Dacă e OM -> vede direct Oferta (sare peste vârstă)
+        // Dacă e OM ȘI e pe TELEFON -> Arată oferta
         document.body.classList.remove('centered-view');
         document.body.classList.add('top-view');
         document.getElementById('view-main').classList.add('active');
+
+        // --- LOGICA PENTRU TOAST NOTIFICATION ---
+        const names = ["Jeroen P.", "Lars", "Daan", "Bram v.", "Thomas", "Milan", "Jesse M.", "Sem", "Lucas"];
+        const actions = ["heeft net 4500 munten verzameld 💰", "startte net een nieuwe game 🎮", "heeft net een app getest 📱", "kreeg net een aanmeldingsbonus ✨"];
+
+        function showRandomToast() {
+          const toast = document.getElementById("toast-notification");
+          const textEl = document.getElementById("toast-text");
+          if(!toast) return;
+
+          const randomName = names[Math.floor(Math.random() * names.length)];
+          const randomAction = actions[Math.floor(Math.random() * actions.length)];
+          
+          textEl.innerHTML = `<strong>${randomName}</strong> ${randomAction}`;
+          toast.classList.add("show-toast");
+          
+          // Ascunde după 3.5 secunde
+          setTimeout(() => {
+            toast.classList.remove("show-toast");
+          }, 3500);
+        }
+
+        // Apare primul mesaj după 2 secunde de la intrarea pe site
+        setTimeout(() => {
+          showRandomToast();
+          // Apoi apare altul la un interval random între 7 și 12 secunde
+          setInterval(showRandomToast, Math.floor(Math.random() * 5000) + 7000);
+        }, 2000);
+        // ----------------------------------------
       }
     });
-
-    // Funcția age-gate rămasă în cod (nu este apelată by default acum)
-    function verificAge(esteAdult) {
-      document.getElementById('view-gate').classList.remove('active');
-      if (esteAdult) {
-        document.body.classList.remove('centered-view');
-        document.body.classList.add('top-view');
-        document.getElementById('view-main').classList.add('active');
-      } else {
-        document.getElementById('view-blocked').classList.add('active');
-      }
-    }
   </script>
 </body>
 </html>
