@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verdien beloningen door apps en games te testen</title>
-  <link rel="icon" href="data:,\">
-  <meta name="description" content="Meld je aan, voltooi eenvoudige taken en begin direct met het verzamelen van beloningen via onze partners." />
+  <title>Verzamel beloningen met games testen</title>
+  <link rel="icon" href="data:,">
+  <meta name="description" content="Ontvang een bonus, voltooi korte taken en begin direct met beloningen verzamelen via games testen." />
   <link rel="preload" as="image" href="assets/freecash-logo.webp" />
   
   <style>
-    /* Păstrez exact stilul tău original */
+    /* ==================================================================
+       1. SETĂRI GLOBALE
+       ================================================================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #07130c;
@@ -35,16 +37,23 @@
       padding: 24px 16px;
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .container { width: 100%; max-width: 460px; z-index: 2; }
+    /* ==================================================================
+       2. LAYOUT & CONTAINER
+       ================================================================== */
+    .container { width: 100%; max-width: 460px; z-index: 2; position: relative; }
     .header { text-align: center; margin-bottom: 32px; }
-    .logo { width: 130px; margin-bottom: 20px; }
+    .logo { width: 130px; margin-bottom: 20px; filter: drop-shadow(0 4px 12px rgba(52, 216, 121, 0.15)); }
 
     h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
     .accent { color: var(--green); }
-    .subtext { color: var(--muted); font-size: 16px; margin-bottom: 24px; }
+    .subtext { color: var(--muted); font-size: 16px; margin-bottom: 24px; max-width: 320px; margin-left: auto; margin-right: auto; }
 
+    /* ==================================================================
+       3. CARDUL PRINCIPAL & PAȘI
+       ================================================================== */
     .main-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -52,6 +61,7 @@
       padding: 32px 24px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       position: relative;
     }
 
@@ -69,6 +79,9 @@
     .step h3 { font-size: 17px; margin-bottom: 4px; color: var(--text); }
     .step p { font-size: 14px; color: var(--muted); line-height: 1.5; }
 
+    /* ==================================================================
+       4. BUTON CTA & TESTIMONIAL
+       ================================================================== */
     .cta-button {
       display: block;
       background: linear-gradient(135deg, #34d879, #27b865);
@@ -80,7 +93,7 @@
       font-weight: 800;
       font-size: 18px;
       box-shadow: 0 10px 25px rgba(52, 216, 121, 0.25);
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     .cta-button:active { transform: scale(0.97); }
 
@@ -93,26 +106,34 @@
       border: 1px solid rgba(255,255,255,0.05);
     }
     .stars { color: var(--yellow); margin-bottom: 8px; font-size: 14px; letter-spacing: 2px; }
-    .testimonial p { font-style: italic; font-size: 14px; color: var(--muted); }
+    .testimonial p { font-style: italic; font-size: 14px; color: var(--muted); line-height: 1.5; }
 
+    /* ==================================================================
+       5. FOOTER & DISCLAIMER
+       ================================================================== */
     footer { text-align: center; margin-top: 40px; color: #5a6e61; font-size: 12px; padding-bottom: 20px; }
-    footer a { color: inherit; text-decoration: none; margin: 0 8px; }
+    footer a { color: inherit; text-decoration: none; margin: 0 8px; border-bottom: 1px solid transparent; transition: border 0.2s; }
+    footer a:hover { border-bottom: 1px solid #5a6e61; }
 
-    /* Stilul pentru View Blocked (Bot protection) */
-    #view-blocked { display: none; text-align: center; margin-top: 100px; }
+    /* ==================================================================
+       6. BLOCARE VIZUALĂ (BOT PROTECTION)
+       ================================================================== */
+    #view-blocked { display: none; text-align: center; max-width: 300px; }
     #view-blocked.active { display: block; }
-    .lock-icon { font-size: 50px; margin-bottom: 20px; color: var(--muted); }
-    body.centered-view { align-items: center; }
+    .lock-icon { font-size: 50px; margin-bottom: 20px; filter: grayscale(1); opacity: 0.5; }
+    
+    body.centered-view { align-items: center; justify-content: center; }
     body.centered-view .container { display: none; }
   </style>
 </head>
+
 <body oncontextmenu="return false;">
 
   <div class="container" id="view-main">
     <div class="header">
       <img src="assets/freecash-logo.webp" alt="FreeCash" class="logo">
-      <h1>Verdien beloningen door <span class="accent">apps en games</span> te testen</h1>
-      <p class="subtext">Meld je aan bij FreeCash, voltooi korte taken en ontvang direct je eerste beloningen.</p>
+      <h1>Verzamel beloningen met <span class="accent">games testen</span></h1>
+      <p class="subtext">Ontvang een welkomstbonus, voltooi korte acties en begin direct met het verzamelen van beloningen.</p>
     </div>
 
     <div class="main-card">
@@ -120,22 +141,22 @@
         <div class="step">
           <div class="step-num">1</div>
           <div>
-            <h3>Maak een account</h3>
-            <p>Registreer je via deze pagina om direct toegang te krijgen tot exclusieve partner-deals.</p>
+            <h3>Account aanmaken</h3>
+            <p>Maak via deze pagina een nieuw FreeCash-account aan om in aanmerking te komen voor exclusieve deals.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div>
-            <h3>Voltooi eenvoudige taken</h3>
-            <p>Kies uit honderden beschikbare aanbiedingen, zoals het testen van nieuwe mobiele apps of games.</p>
+            <h3>Voltooi korte taken</h3>
+            <p>Rond de eerste eenvoudige acties van onze partners af zodat uw speciale aanbieding wordt geactiveerd.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div>
-            <h3>Ontvang je uitbetaling</h3>
-            <p>Wissel je verdiende munten in voor cadeaubonnen, crypto of contant geld op je account.</p>
+            <h3>Start met verzamelen</h3>
+            <p>Ga daarna direct door naar het testen van de nieuwste apps, games en andere officiële betaalde opdrachten.</p>
           </div>
         </div>
       </div>
@@ -145,13 +166,15 @@
 
     <div class="testimonial">
       <div class="stars">★★★★★</div>
-      <p>“Snel en betrouwbaar platform. De instructies zijn duidelijk en de beloningen worden direct verwerkt in mijn account.”</p>
+      <p>“Duidelijk, snel en veel beter te begrijpen dan een standaard pagina. De instructies zijn simpel en de beloningen worden direct bijgeschreven.”</p>
     </div>
 
     <footer>
-      <a href="#">Privacy</a> | <a href="#">Voorwaarden</a> | <a href="#">Disclaimer</a><br><br>
-      <p style="line-height: 1.4; opacity: 0.8; max-width: 300px; margin: 0 auto;">
-        <strong>Disclaimer:</strong> Dit is een affiliate pagina. Beloningen worden toegekend na correcte voltooiing van taken volgens de regels van de adverteerder.
+      <a href="#">Privacybeleid</a>
+      <a href="#">Voorwaarden</a>
+      <a href="#">Disclaimer</a><br><br>
+      <p style="opacity: 0.7; max-width: 320px; margin: 0 auto; line-height: 1.4;">
+        <strong>Disclaimer:</strong> Wij zijn een onafhankelijke partner. Beloningen zijn afhankelijk van het voltooien van taken volgens de richtlijnen van de adverteerder.
       </p>
       <br>
       © 2026 Alle rechten voorbehouden.
@@ -160,38 +183,47 @@
 
   <div id="view-blocked">
     <div class="lock-icon">🔒</div>
-    <h2>Toegang Beperkt</h2>
-    <p>Deze pagina is beveiligd. Gebruik een mobiel apparaat voor de beste ervaring.</p>
+    <h2 style="font-size: 20px; margin-bottom: 10px;">Toegang Beperkt</h2>
+    <p style="color: var(--muted); font-size: 14px;">Deze pagina is beveiligd. Gebruik een mobiel apparaat voor de volledige ervaring.</p>
   </div>
 
   <script>
-    // Blocare inspecție element (păstrat din originalul tău)
+    /* ==================================================================
+       BLOCARE INSPECT ELEMENT & SHORTCUTS
+       ================================================================== */
     document.addEventListener('keydown', function(event) {
-      if (event.key === 'F12' || 
-          (event.ctrlKey && event.shiftKey && event.key === 'I') || 
-          (event.ctrlKey && event.shiftKey && event.key === 'J') || 
-          (event.ctrlKey && event.key === 'U')) {
-        event.preventDefault();
+      if (
+        event.key === 'F12' || 
+        (event.ctrlKey && event.shiftKey && event.key === 'I') || 
+        (event.ctrlKey && event.shiftKey && event.key === 'J') || 
+        (event.ctrlKey && event.key === 'U') || 
+        (event.ctrlKey && event.shiftKey && event.key === 'C')
+      ) {
+        event.preventDefault(); 
       }
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-      // Păstrare parametri URL
+      /* PĂSTRARE PARAMETRI URL PE BUTOANE */
       document.querySelectorAll("a").forEach(function (el) {
         var href = el.getAttribute("href");
         if (!href || href.includes("#")) return;
         el.setAttribute("href", href + (href.includes("?") ? "&" : "?") + window.location.search.replace("?", ""));
       });
 
-      // Bot detection logic (păstrat din originalul tău)
+      /* LOGICĂ DETECTARE BOTI */
       var u = navigator.userAgent.toLowerCase();
-      var b = ['bytespider', 'facebookexternalhit', 'googlebot', 'bingbot', 'twitterbot', 'discordbot', 'instagram', 'applebot'];
+      var b = ['bytespider', 'facebookexternalhit', 'googlebot', 'bingbot', 'twitterbot', 'discordbot', 'instagram', 'applebot', 'yandexbot'];
+      
       var isBot = b.some(function(x) { return u.indexOf(x) > -1 });
 
       if (isBot) {
         document.body.classList.add('centered-view');
-        document.getElementById('view-main').style.display = 'none';
         document.getElementById('view-blocked').classList.add('active');
+        document.getElementById('view-main').style.display = 'none';
+      } else {
+        document.body.classList.remove('centered-view');
+        document.getElementById('view-main').style.display = 'block';
       }
     });
   </script>
